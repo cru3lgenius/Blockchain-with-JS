@@ -4,11 +4,12 @@
   "description": "Simple Blockchain implementation with JS",
   "main": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "Denis R.",
   "license": "MIT",
   "dependencies": {
+    "crypto": "^1.0.1",
     "crypto-js": "^3.1.9-1",
     "mocha": "^5.2.0"
   }

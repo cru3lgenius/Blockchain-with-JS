@@ -7,13 +7,6 @@ class Block {
     this.hash = hash;
     this.previousHash = previousHash;
   }
-
-  get genesisBlock() {
-    const index = 0;
-    const data = "Genesis Block";
-
-    return new Block();
-  }
 }
 
 module.exports = Block;
