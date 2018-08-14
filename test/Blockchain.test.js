@@ -39,4 +39,14 @@ describe("testing Blockchain methods", () => {
 
     assert.equal(newBlock.hash, blockchain.latestBlock.hash);
   });
+
+  it("mines a block", () => {
+    try {
+      blockchain.mine("random data");
+    } catch (error) {
+      assert(false, error.message);
+    }
+
+    assert(true);
+  });
 });

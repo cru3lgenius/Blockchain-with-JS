@@ -3,8 +3,8 @@ const sha256 = require("crypto-js/sha256");
 
 class Blockchain {
   constructor() {
-    this.blockchain = [this.genesisBlock];
     this.difficulty = 3;
+    this.blockchain = [this.genesisBlock];
   }
 
   get latestBlock() {
@@ -15,16 +15,25 @@ class Blockchain {
     return this.blockchain;
   }
 
+  mine(data) {
+    const minedBlock = this.generateNextBlock(data);
+    try {
+      this.addNextBlock(minedBlock);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   get genesisBlock() {
     const index = 0;
     const previousHash = "0";
     const timestamp = "1533115770890";
     const data = "genesis block";
     let nonce = 0;
-    let hash = this.calculateHash(index, previousHash, timestamp, nonce, data);
+    let hash = this.calculateHash(index, timestamp, data, previousHash, nonce);
     while (!this.isValidNonce(hash)) {
       nonce += 1;
-      hash = calculateHash(index, previousHash, timestamp, nonce, data);
+      hash = this.calculateHash(index, timestamp, data, previousHash, nonce);
     }
 
     return new Block(index, data, nonce, timestamp, hash, previousHash);
@@ -87,6 +96,36 @@ class Blockchain {
 
   calculateHash(index, timestamp, data, previousHash, nonce) {
     return sha256(index + timestamp + data + previousHash + nonce).toString();
+  }
+
+  isValidChain(chain) {
+    //Doesn't start with the same genesis block
+    if (this.blockchain[0] !== chain[0]) {
+      return false;
+    }
+
+    const chainTail = [chain[0]];
+
+    for (let i = 1; i < chain.length; i++) {
+      if (this.isValidNextBlock(chain[i], chainTail[i - 1])) {
+        chainTail.push(chain[i]);
+      } else {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  isChainLonger(chain) {
+    return chain.length > this.blockchain.length;
+  }
+
+  replaceChain(newChain) {
+    if (this.isValidChain(chain) && this.isChainLonger(newChain)) {
+      this.blockchain = [...newChain];
+    } else {
+      throw "Invalid Chain";
+    }
   }
 }
 

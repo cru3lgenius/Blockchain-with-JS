@@ -11,6 +11,10 @@
   "dependencies": {
     "crypto": "^1.0.1",
     "crypto-js": "^3.1.9-1",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "peer-exchange": "^2.2.0",
+    "socket.io": "^2.1.1",
+    "socket.io-p2p-server": "^1.2.0",
+    "wrtc": "^0.1.6"
   }
 }
