@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Blockchain visual tool</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.css" />
+</head>
+
+<body>
+
+  <div class="ui stackable grid container centered">
+    <div class="ten wide column  mt-50">
+      <h3 class="ui header">Check blockchain properties</h3>
+      <br>
+      <div class="ui middle aligned divided list">
+        <div class="item">
+          <div class="right floated content">
+            <div class="ui icon button">
+              <i class="icon plus"></i>
+            </div>
+          </div>
+          <div class="content">
+            See the whole chain
+          </div>
+        </div>
+        <div class="item">
+          <div class="right floated content">
+            <div class="ui button icon">
+              <i class="icon plus"></i>
+            </div>
+          </div>
+
+          <div class="content">
+            Check if the chain is valid
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ten wide column mt-50">
+      <h3 class="ui header">Add a new block</h3>
+      <div class="ui small form">
+        <div class="one field">
+          <div class="field">
+            <input placeholder="Block data..." type="text">
+          </div>
+        </div>
+        <div class="ui fluid submit button">Add</div>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.js"></script>
+
+  <canvas class="background"></canvas>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.2/particles.min.js"></script>
+  <script>
+    Particles.init({
+      selector: '.background',
+      maxParticles: 400,
+      sizeVariations: 2,
+      color: "#00BFA5",
+
+    });
+  </script>
+  <script>
+    function onShowChain() {
+      console.log('hehe');
+    }
+  </script>
+</body>
+
+</html>
