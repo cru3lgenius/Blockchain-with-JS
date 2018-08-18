@@ -1,6 +1,6 @@
 const assert = require("assert");
-const Blockchain = require("../Blockchain");
-const Block = require("../Block");
+const Blockchain = require("../js_bundle/Blockchain");
+const Block = require("../js_bundle/Block");
 
 let blockchain;
 

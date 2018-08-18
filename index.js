@@ -1,4 +1,4 @@
-const Blockchain = require("./Blockchain");
+const Blockchain = require("./js_bundle/Blockchain");
 const stdin = process.openStdin();
 const blockchain = new Blockchain();
 

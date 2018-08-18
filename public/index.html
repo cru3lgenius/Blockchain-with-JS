@@ -8,7 +8,7 @@
   <title>Blockchain visual tool</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.css" />
-  <script src="handlebars-v4.0.11.js"></script>
+  <!-- <script src="handlebars-v4.0.11.js"></script> -->
 </head>
 
 <body>
@@ -20,7 +20,7 @@
       <div class="ui middle aligned divided list">
         <div class="item">
           <div class="right floated content">
-            <div class="ui icon button">
+            <div id="showBtn" class="ui icon button">
               <i class="icon plus"></i>
             </div>
           </div>
@@ -30,8 +30,8 @@
         </div>
         <div class="item">
           <div class="right floated content">
-            <div class="ui button icon">
-              <i class="icon plus"></i>
+            <div id="checkBtn" class="ui button icon">
+              <i class="icon cube"></i>
             </div>
           </div>
 
@@ -41,54 +41,25 @@
         </div>
       </div>
     </div>
-    <div id="chain" class="ten wide column mt-50">
-      <div class="ui card">
-        <div class="content">
-          <div class="header">Block</div>
-          <br>
-          <div class="description">
-            <h5>Hash:</h5>
-            <p>l19494148ß918481891949941491490491</p>
-            <h5>Previous Hash:</h5>
-            <p>l19494148ß918481891949941491490491</p>
-            <h5>Data</h5>
-            <p>l19494148ß918481891949941491490491</p>
-          </div>
-        </div>
-      </div>
+    <div id="chain" class="ten wide column mt-50 hide">
 
-      <div class="ui card">
-        <div class="content">
-          <div class="header">Block</div>
-          <br>
-          <div class="description">
-            <h5>Hash:</h5>
-            <p>l19494148ß918481891949941491490491</p>
-            <h5>Previous Hash:</h5>
-            <p>l19494148ß918481891949941491490491</p>
-            <h5>Data</h5>
-            <p>l19494148ß918481891949941491490491</p>
-          </div>
-        </div>
-      </div>
     </div>
     <div class="ten wide column mt-50">
       <h3 class="ui header">Add a new block</h3>
       <div class="ui small form">
         <div class="one field">
           <div class="field">
-            <input placeholder="Block data..." type="text">
+            <input id="inputData" placeholder="Block data..." type="text">
           </div>
         </div>
-        <div class="ui fluid submit button">Add</div>
+        <div id="addBtn" class="ui fluid submit button">Add</div>
       </div>
     </div>
 
   </div>
 
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.js"></script>
+
 
   <canvas class="background"></canvas>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.2/particles.min.js"></script>
@@ -101,8 +72,8 @@
 
     });
   </script>
-  <script src="main.js"></script>
-
+  <script src="bundle.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.js"></script> -->
 </body>
 
 </html>

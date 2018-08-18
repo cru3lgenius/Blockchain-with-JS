@@ -27,3 +27,11 @@ body {
 .ui.card {
   margin: 1em auto !important;
 }
+
+#chain.hide {
+  display: none;
+}
+
+.overflow-a {
+  overflow: auto;
+}

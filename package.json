@@ -4,7 +4,8 @@
   "description": "Simple Blockchain implementation with JS",
   "main": "",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "build": "webpack js_bundle/main.js -o dist/bundle.js"
   },
   "author": "Denis R.",
   "license": "MIT",
@@ -12,6 +13,11 @@
     "crypto": "^1.0.1",
     "crypto-js": "^3.1.9-1",
     "express": "^4.16.3",
+    "jquery": "^3.3.1",
     "mocha": "^5.2.0"
+  },
+  "devDependencies": {
+    "webpack": "^4.16.5",
+    "webpack-cli": "^3.1.0"
   }
 }
