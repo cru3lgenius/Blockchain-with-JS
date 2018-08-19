@@ -20,8 +20,16 @@ let blockCard = `<div class="ui card">
   </div>
 </div>
 </div>`;
-let blockCardTemplate = Handlebars.compile(blockCard);
 
+let messageHtml = `<div class="ui {{type}} message">
+<div class="header">
+  {{header}}
+</div>
+<p>{{text}}</p>
+</div>`;
+
+let blockCardTemplate = Handlebars.compile(blockCard);
+let messageTemplate = Handlebars.compile(messageHtml);
 //let cardData = blockCardTemplate({ data: "randomName" });
 //$("#chain").append($(cardData));
 
@@ -42,18 +50,82 @@ $("#showBtn").on("click", function(e) {
     $("#showBtn").addClass("yellow");
   }
   isToggled = !isToggled;
-  $("#chain").toggle("hide");
+  $("#chain").toggle();
 });
 
-// TODO: Add a block on click
+// Add a block on click
 $("#addBtn").on("click", function(e) {
   let data = $("#inputData").val();
+  let message;
+  if (data === "") {
+    message = messageTemplate({
+      type: "negative",
+      header: "Error",
+      text: "Sorry an empty input field is not allowed!"
+    });
+    $("#message").html(message);
+    $("#message").toggle("slow", function() {
+      setTimeout(() => {
+        $("#message").toggle("slow", function() {});
+      }, 1800);
+    });
+    return;
+  } else {
+    message = messageTemplate({
+      type: "positive",
+      header: "Successful",
+      text: "You added the next block successfully!"
+    });
+  }
+  $("#message").html(message);
+  $("#message").toggle("slow", function() {
+    setTimeout(() => {
+      $("#message").toggle("slow", function() {});
+    }, 1800);
+  });
   $("#inputData").val("");
   let nextBlockCard = createNextBlock(data);
+  console.log(blockchain);
   $("#chain").append(nextBlockCard);
 });
 
 // TODO: check if the chain is valid on click
+$("#checkBtn").on("click", function() {
+  let isValid = blockchain.isValidChain(blockchain);
+  let message;
+  if (isValid) {
+    message = messageTemplate({
+      type: "positive",
+      header: "Valid",
+      text: "The chain is valid!"
+    });
+    $("#message").html(message);
+    $("#checkBtn").toggleClass("green");
+    $("#message").toggle("slow", function() {
+      setTimeout(() => {
+        $("#checkBtn").toggleClass("green");
+        $("#message").toggle("slow", function() {});
+      }, 1800);
+    });
+    $("#checkBtn").toggleClass("green");
+  } else {
+    message = messageTemplate({
+      type: "negative",
+      header: "Invalid",
+      text: "The chain is invalid!"
+    });
+    $("#message").html(message);
+    $("#checkBtn").toggleClass("red");
+    $("#message").toggle("slow", function() {
+      setTimeout(() => {
+        $("#checkBtn").toggleClass("red");
+        $("#message").toggle("slow", function() {});
+      }, 1800);
+    });
+  }
+
+  //TODO: Fix isValidChain method to work for this chain
+});
 
 // TODO: recalculate the hash on data change
 

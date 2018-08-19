@@ -101,6 +101,8 @@ class Blockchain {
   isValidChain(chain) {
     //Doesn't start with the same genesis block
     if (this.blockchain[0] !== chain[0]) {
+      console.log("first if invalidChain");
+
       return false;
     }
 
@@ -110,6 +112,8 @@ class Blockchain {
       if (this.isValidNextBlock(chain[i], chainTail[i - 1])) {
         chainTail.push(chain[i]);
       } else {
+        console.log(`indices i and i-1 ${i} + ${i}`);
+
         return false;
       }
     }

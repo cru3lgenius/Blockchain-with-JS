@@ -16,6 +16,9 @@ body {
   margin-top: 80px;
 }
 
+.mt-10#message {
+  margin-top: 10px;
+}
 .border {
   border: 1px dashed #ad1457;
 }
@@ -34,4 +37,16 @@ body {
 
 .overflow-a {
   overflow: auto;
+  font-size: 0.85em;
+  color: #1b5e20;
+  background-color: #f1f8e9;
+}
+
+#message {
+  display: none;
+  padding: 5px;
+}
+
+#chain.mb-50 {
+  margin-bottom: 50px;
 }
