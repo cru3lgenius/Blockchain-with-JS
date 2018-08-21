@@ -6,6 +6,7 @@ class Block {
     this.timestamp = timestamp;
     this.hash = hash;
     this.previousHash = previousHash;
+    this.isValid = true;
   }
 }
 

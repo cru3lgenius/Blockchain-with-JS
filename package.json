@@ -2,10 +2,10 @@
   "name": "blockchain-with-js",
   "version": "1.0.0",
   "description": "Simple Blockchain implementation with JS",
-  "main": "",
+  "main": "server.js",
   "scripts": {
     "test": "mocha",
-    "build": "webpack js_bundle/main.js -o dist/bundle.js"
+    "build": "webpack js_bundle/main.js -o public/bundle.js && npm restart"
   },
   "author": "Denis R.",
   "license": "MIT",

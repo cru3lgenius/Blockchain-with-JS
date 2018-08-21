@@ -3,6 +3,10 @@ const Blockchain = require("./Blockchain");
 const $ = require("jquery");
 const blockchain = new Blockchain();
 
+function onChange(e) {
+  console.log("something changed ");
+}
+
 //Preparing templates for late use
 let blockCard = `<div class="ui card">
 <div class="content">
@@ -15,7 +19,7 @@ let blockCard = `<div class="ui card">
     <p class="overflow-a">{{previousBlockHash}}</p>
     <h5>Data:</h5>
     <div class="ui input focus">
-      <input minlength="1" value={{data}} type='text'>
+      <input id={{index}} minlength="1" value={{data}} type='text'>
     </div>
   </div>
 </div>
@@ -85,13 +89,14 @@ $("#addBtn").on("click", function(e) {
   });
   $("#inputData").val("");
   let nextBlockCard = createNextBlock(data);
-  console.log(blockchain);
+  let index = blockchain.latestBlock.index;
   $("#chain").append(nextBlockCard);
+  $(`#${index}`).bind("input", onChange);
 });
 
 // TODO: check if the chain is valid on click
 $("#checkBtn").on("click", function() {
-  let isValid = blockchain.isValidChain(blockchain);
+  let isValid = blockchain.isValidChain();
   let message;
   if (isValid) {
     message = messageTemplate({
@@ -123,9 +128,9 @@ $("#checkBtn").on("click", function() {
       }, 1800);
     });
   }
-
-  //TODO: Fix isValidChain method to work for this chain
 });
+
+//TODO: Make block red if incorrect (isValid in Block.js)
 
 // TODO: recalculate the hash on data change
 
@@ -137,7 +142,13 @@ function createNextBlock(data) {
   const newCard = blockCardTemplate({
     data: latestBlock.data,
     currentBlockHash: latestBlock.hash,
-    previousBlockHash: latestBlock.previousHash
+    previousBlockHash: latestBlock.previousHash,
+    index: latestBlock.index
   });
   return newCard;
+}
+
+// TODO: Implement this method to trigger validchain check
+function onChange(e) {
+  console.log(e.target.value);
 }

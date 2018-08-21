@@ -98,22 +98,43 @@ class Blockchain {
     return sha256(index + timestamp + data + previousHash + nonce).toString();
   }
 
-  isValidChain(chain) {
-    //Doesn't start with the same genesis block
-    if (this.blockchain[0] !== chain[0]) {
-      console.log("first if invalidChain");
+  // isValidChain(chain) {
+  //   //Doesn't start with the same genesis block
+  //   if (this.blockchain[0] !== chain[0]) {
+  //     console.log("first if invalidChain");
 
+  //     return false;
+  //   }
+
+  //   const chainTail = [chain[0]];
+
+  //   for (let i = 1; i < chain.length; i++) {
+  //     if (this.isValidNextBlock(chain[i], chainTail[i - 1])) {
+  //       chainTail.push(chain[i]);
+  //     } else {
+  //       console.log(`indices i and i-1 ${i} + ${i}`);
+
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // }
+
+  isValidChain() {
+    const genesisBlock = this.blockchain[0];
+    if (
+      genesisBlock.index !== 0 ||
+      genesisBlock.hash !== this.genesisBlock.hash ||
+      genesisBlock.previousHash !== "0" ||
+      !this.isValidDifficulty(genesisBlock.hash)
+    ) {
       return false;
     }
 
-    const chainTail = [chain[0]];
-
-    for (let i = 1; i < chain.length; i++) {
-      if (this.isValidNextBlock(chain[i], chainTail[i - 1])) {
-        chainTail.push(chain[i]);
-      } else {
-        console.log(`indices i and i-1 ${i} + ${i}`);
-
+    for (let i = 1; i < this.blockchain.length; i++) {
+      const currentBlock = this.blockchain[i];
+      const previousBlock = this.blockchain[i - 1];
+      if (!this.isValidNextBlock(currentBlock, previousBlock)) {
         return false;
       }
     }
