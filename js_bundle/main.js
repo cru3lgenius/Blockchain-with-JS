@@ -8,7 +8,7 @@ function onChange(e) {
 }
 
 //Preparing templates for late use
-let blockCard = `<div class="ui card">
+let blockCard = `<div id={{index}} class="ui card">
 <div class="content">
   <div class="header">Block</div>
   <br>
@@ -19,7 +19,7 @@ let blockCard = `<div class="ui card">
     <p class="overflow-a">{{previousBlockHash}}</p>
     <h5>Data:</h5>
     <div class="ui input focus">
-      <input id={{index}} minlength="1" value={{data}} type='text'>
+      <input name={{index}} minlength="1" value={{data}} type='text'>
     </div>
   </div>
 </div>
@@ -91,7 +91,7 @@ $("#addBtn").on("click", function(e) {
   let nextBlockCard = createNextBlock(data);
   let index = blockchain.latestBlock.index;
   $("#chain").append(nextBlockCard);
-  $(`#${index}`).bind("input", onChange);
+  $(`#${index} input`).bind("input", onChange);
 });
 
 // TODO: check if the chain is valid on click
@@ -150,5 +150,11 @@ function createNextBlock(data) {
 
 // TODO: Implement this method to trigger validchain check
 function onChange(e) {
-  console.log(e.target.value);
+  let currentBlock = blockchain.blockchain[e.target.name];
+  currentBlock.data = e.target.value;
+  let newHash = blockchain.calculateBlockHash(currentBlock);
+  currentBlock.hash = newHash;
+  currentBlock.isValid = blockchain.isValidDifficulty(currentBlock.hash);
+  blockchain.propagateForward(currentBlock.index + 1, currentBlock);
+  console.log(blockchain.blockchain);
 }

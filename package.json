@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "mocha",
-    "build": "webpack js_bundle/main.js -o public/bundle.js && npm restart"
+    "build": "webpack js_bundle/main.js -o public/bundle.js && nodemon server.js"
   },
   "author": "Denis R.",
   "license": "MIT",

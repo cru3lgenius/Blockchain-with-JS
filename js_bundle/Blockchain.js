@@ -77,6 +77,13 @@ class Blockchain {
 
   isValidNextBlock(nextBlock, latestBlock) {
     const expectedHashNextBlock = this.calculateBlockHash(nextBlock);
+    // console.log("1) " + nextBlock.index + " " + latestBlock.index + 1);
+    // console.log("2) " + expectedHashNextBlock + " " + nextBlock.hash);
+    // console.log("3) " + nextBlock.previousHash + " " + latestBlock.hash);
+    // console.log("4) " + this.isValidDifficulty(nextBlock.hash));
+
+    console.log(latestBlock);
+
     if (
       nextBlock.index === latestBlock.index + 1 &&
       expectedHashNextBlock === nextBlock.hash &&
@@ -139,6 +146,19 @@ class Blockchain {
       }
     }
     return true;
+  }
+
+  propagateForward(startIndex, previousBlock) {
+    let { hash } = previousBlock;
+    for (let i = startIndex; i < this.blockchain.length; i++) {
+      let currentBlock = this.blockchain[i];
+      currentBlock.previousHash = hash;
+      const newHash = this.calculateBlockHash(currentBlock);
+      currentBlock.hash = newHash;
+      currentBlock.isValid = this.isValidNextBlock(currentBlock, previousBlock);
+      hash = newHash;
+      previousBlock = currentBlock;
+    }
   }
 
   isChainLonger(chain) {
