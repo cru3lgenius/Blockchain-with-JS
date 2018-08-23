@@ -38,7 +38,7 @@ body {
 .overflow-a {
   overflow: auto;
   font-size: 0.85em;
-  color: #1b5e20;
+  color: #1a237e;
   background-color: #f1f8e9;
 }
 
@@ -49,4 +49,16 @@ body {
 
 #chain.mb-50 {
   margin-bottom: 50px;
+}
+.block-validity {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.block-validity.valid {
+  color: #2e7d32;
+}
+
+.block-validity.invalid {
+  color: #d50000;
 }

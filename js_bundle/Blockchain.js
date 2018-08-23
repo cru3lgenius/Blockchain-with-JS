@@ -77,13 +77,6 @@ class Blockchain {
 
   isValidNextBlock(nextBlock, latestBlock) {
     const expectedHashNextBlock = this.calculateBlockHash(nextBlock);
-    // console.log("1) " + nextBlock.index + " " + latestBlock.index + 1);
-    // console.log("2) " + expectedHashNextBlock + " " + nextBlock.hash);
-    // console.log("3) " + nextBlock.previousHash + " " + latestBlock.hash);
-    // console.log("4) " + this.isValidDifficulty(nextBlock.hash));
-
-    console.log(latestBlock);
-
     if (
       nextBlock.index === latestBlock.index + 1 &&
       expectedHashNextBlock === nextBlock.hash &&

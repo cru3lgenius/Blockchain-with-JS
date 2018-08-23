@@ -14,12 +14,14 @@ let blockCard = `<div id={{index}} class="ui card">
   <br>
   <div class="description">
     <h5>Hash:</h5>
-    <p class="overflow-a">{{currentBlockHash}}</p>
+    <p class="current-hash overflow-a">{{currentBlockHash}}</p>
     <h5>Previous Hash:</h5>
-    <p class="overflow-a">{{previousBlockHash}}</p>
+    <p class="previous-hash overflow-a">{{previousBlockHash}}</p>
+    <h5>Is current block valid?</h5>
+    <p class="block-validity {{isValidClass}}">{{isValid}}</p>
     <h5>Data:</h5>
     <div class="ui input focus">
-      <input name={{index}} minlength="1" value={{data}} type='text'>
+      <input name={{index}} minlength="1" value="{{data}}" type='text'>
     </div>
   </div>
 </div>
@@ -36,6 +38,8 @@ let blockCardTemplate = Handlebars.compile(blockCard);
 let messageTemplate = Handlebars.compile(messageHtml);
 //let cardData = blockCardTemplate({ data: "randomName" });
 //$("#chain").append($(cardData));
+
+init();
 
 // Show the chain on click
 let isToggled = false;
@@ -143,7 +147,9 @@ function createNextBlock(data) {
     data: latestBlock.data,
     currentBlockHash: latestBlock.hash,
     previousBlockHash: latestBlock.previousHash,
-    index: latestBlock.index
+    index: latestBlock.index,
+    isValid: latestBlock.isValid ? "Yes" : "No",
+    isValidClass: latestBlock.isValid ? "valid" : "invalid"
   });
   return newCard;
 }
@@ -157,4 +163,58 @@ function onChange(e) {
   currentBlock.isValid = blockchain.isValidDifficulty(currentBlock.hash);
   blockchain.propagateForward(currentBlock.index + 1, currentBlock);
   console.log(blockchain.blockchain);
+  reRenderChain();
+}
+
+function reRenderChain() {
+  $("#chain")
+    .children()
+    .each((e1, e2) => {
+      const validityParagraph = e2.getElementsByClassName("block-validity")[0];
+      const hashParagraph = e2.getElementsByClassName("current-hash")[0];
+      const previousHashParagraph = e2.getElementsByClassName(
+        "previous-hash"
+      )[0];
+      const isValidBlock = blockchain.blockchain[e1].isValid;
+      adjustBlockStyles(validityParagraph, isValidBlock);
+      adjustBlockHashValues(e1, hashParagraph, previousHashParagraph);
+    });
+}
+
+function init() {
+  const genesisBlock = blockchain.blockchain[0];
+  const genesisCard = blockCardTemplate({
+    data: genesisBlock.data,
+    currentBlockHash: genesisBlock.hash,
+    previousBlockHash: genesisBlock.previousHash,
+    index: genesisBlock.index,
+    isValid: genesisBlock.isValid ? "Yes" : "No",
+    isValidClass: genesisBlock.isValid ? "valid" : "invalid"
+  });
+  console.log(blockchain.blockchain);
+
+  $("#chain").append(genesisCard);
+  $(`#${genesisBlock.index} input`).bind("input", onChange);
+}
+
+function adjustBlockStyles(element, isValidBlock) {
+  if (isValidBlock) {
+    element.classList.remove("invalid");
+    element.classList.add("valid");
+    element.innerHTML = "Yes";
+  } else {
+    element.classList.remove("valid");
+    element.classList.add("invalid");
+    element.innerHTML = "No";
+  }
+}
+
+function adjustBlockHashValues(
+  blockIndex,
+  hashParagraph,
+  previousHashParagraph
+) {
+  const currentBlock = blockchain.blockchain[blockIndex];
+  hashParagraph.innerHTML = currentBlock.hash;
+  previousHashParagraph.innerHTML = currentBlock.previousHash;
 }
