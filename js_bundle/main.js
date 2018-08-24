@@ -3,29 +3,34 @@ const Blockchain = require("./Blockchain");
 const $ = require("jquery");
 const blockchain = new Blockchain();
 
-function onChange(e) {
-  console.log("something changed ");
-}
-
 //Preparing templates for late use
 let blockCard = `<div id={{index}} class="ui card">
-<div class="content">
-  <div class="header">Block</div>
-  <br>
-  <div class="description">
-    <h5>Hash:</h5>
-    <p class="current-hash overflow-a">{{currentBlockHash}}</p>
-    <h5>Previous Hash:</h5>
-    <p class="previous-hash overflow-a">{{previousBlockHash}}</p>
-    <h5>Is current block valid?</h5>
-    <p class="block-validity {{isValidClass}}">{{isValid}}</p>
-    <h5>Data:</h5>
-    <div class="ui input focus">
-      <input name={{index}} minlength="1" value="{{data}}" type='text'>
+  <div class="content">
+    <h3 class="header">Block {{index}}</h3>
+    <br>
+    <div class="description">
+      <h4>Hash:</h4>
+      <p class="current-hash overflow-a">{{currentBlockHash}}</p>
+      <h4>Previous Hash:</h4>
+      <p class="previous-hash overflow-a">{{previousBlockHash}}</p>
+      <h4>Is current block valid?</h4>
+      <p class="block-validity {{isValidClass}}">{{isValid}}</p>
+      <h4>Data:</h4>
+      <div class="ui input focus">
+        <input name={{index}} minlength="1" value="{{data}}" type='text'>
+      </div>
+      <br>
+      <button name="fix-{{index}}" class="ui fluid button icon">
+        <i class="undo icon"></i>
+      </button>
     </div>
   </div>
-</div>
 </div>`;
+
+let arrowCard = `
+  <div class="arrow-style">
+    <i class="angle down icon"></i>
+  </div>`;
 
 let messageHtml = `<div class="ui {{type}} message">
 <div class="header">
@@ -36,6 +41,7 @@ let messageHtml = `<div class="ui {{type}} message">
 
 let blockCardTemplate = Handlebars.compile(blockCard);
 let messageTemplate = Handlebars.compile(messageHtml);
+let arrowTemplate = Handlebars.compile(arrowCard);
 //let cardData = blockCardTemplate({ data: "randomName" });
 //$("#chain").append($(cardData));
 
@@ -50,12 +56,12 @@ $("#showBtn").on("click", function(e) {
     $("#showBtn .icon")
       .removeClass("minus")
       .addClass("plus");
-    $("#showBtn").removeClass("yellow");
+    $("#showBtn").removeClass("clean");
   } else {
     $("#showBtn .icon")
       .removeClass("plus")
       .addClass("minus");
-    $("#showBtn").addClass("yellow");
+    $("#showBtn").addClass("clean");
   }
   isToggled = !isToggled;
   $("#chain").toggle();
@@ -65,16 +71,16 @@ $("#showBtn").on("click", function(e) {
 $("#addBtn").on("click", function(e) {
   let data = $("#inputData").val();
   let message;
-  if (data === "") {
+  if (data.length <= 0) {
     message = messageTemplate({
       type: "negative",
       header: "Error",
       text: "Sorry an empty input field is not allowed!"
     });
-    $("#message").html(message);
-    $("#message").toggle("slow", function() {
+    $("#message-new-block").html(message);
+    $("#message-new-block").toggle("slow", function() {
       setTimeout(() => {
-        $("#message").toggle("slow", function() {});
+        $("#message-new-block").toggle("slow", function() {});
       }, 1800);
     });
     return;
@@ -85,15 +91,16 @@ $("#addBtn").on("click", function(e) {
       text: "You added the next block successfully!"
     });
   }
-  $("#message").html(message);
-  $("#message").toggle("slow", function() {
+  $("#message-new-block").html(message);
+  $("#message-new-block").toggle("slow", function() {
     setTimeout(() => {
-      $("#message").toggle("slow", function() {});
+      $("#message-new-block").toggle("slow", function() {});
     }, 1800);
   });
   $("#inputData").val("");
   let nextBlockCard = createNextBlock(data);
   let index = blockchain.latestBlock.index;
+  $("#chain .card:last-child").append($(arrowCard));
   $("#chain").append(nextBlockCard);
   $(`#${index} input`).bind("input", onChange);
 });
@@ -108,37 +115,30 @@ $("#checkBtn").on("click", function() {
       header: "Valid",
       text: "The chain is valid!"
     });
-    $("#message").html(message);
-    $("#checkBtn").toggleClass("green");
-    $("#message").toggle("slow", function() {
+    $("#message-chain-check").html(message);
+    $("#checkBtn").toggleClass("success");
+    $("#message-chain-check").toggle("slow", function() {
       setTimeout(() => {
-        $("#checkBtn").toggleClass("green");
-        $("#message").toggle("slow", function() {});
+        $("#checkBtn").toggleClass("success");
+        $("#message-chain-check").toggle("slow", function() {});
       }, 1800);
     });
-    $("#checkBtn").toggleClass("green");
   } else {
     message = messageTemplate({
       type: "negative",
       header: "Invalid",
       text: "The chain is invalid!"
     });
-    $("#message").html(message);
-    $("#checkBtn").toggleClass("red");
-    $("#message").toggle("slow", function() {
+    $("#message-chain-check").html(message);
+    $("#checkBtn").toggleClass("failure");
+    $("#message-chain-check").toggle("slow", function() {
       setTimeout(() => {
-        $("#checkBtn").toggleClass("red");
-        $("#message").toggle("slow", function() {});
+        $("#checkBtn").toggleClass("failure");
+        $("#message-chain-check").toggle("slow", function() {});
       }, 1800);
     });
   }
 });
-
-//TODO: Make block red if incorrect (isValid in Block.js)
-
-// TODO: recalculate the hash on data change
-
-// TODO: Add a arrow between each block
 
 function createNextBlock(data) {
   blockchain.mine(data);
@@ -166,6 +166,8 @@ function onChange(e) {
   reRenderChain();
 }
 
+function onFix(e) {}
+
 function reRenderChain() {
   $("#chain")
     .children()
@@ -175,9 +177,10 @@ function reRenderChain() {
       const previousHashParagraph = e2.getElementsByClassName(
         "previous-hash"
       )[0];
+      const fixBtn = e2.querySelector(`[name^="fix-"]`);
       const isValidBlock = blockchain.blockchain[e1].isValid;
-      adjustBlockStyles(validityParagraph, isValidBlock);
-      adjustBlockHashValues(e1, hashParagraph, previousHashParagraph);
+      adjustBlockStyles(validityParagraph, fixBtn, isValidBlock, e2);
+      adjustBlockHashValues(e1, hashParagraph, previousHashParagraph, e2);
     });
 }
 
@@ -192,29 +195,58 @@ function init() {
     isValidClass: genesisBlock.isValid ? "valid" : "invalid"
   });
   console.log(blockchain.blockchain);
-
   $("#chain").append(genesisCard);
   $(`#${genesisBlock.index} input`).bind("input", onChange);
 }
 
-function adjustBlockStyles(element, isValidBlock) {
+function adjustBlockStyles(
+  validityParagraph,
+  fixBtn,
+  isValidBlock,
+  cardElement
+) {
   if (isValidBlock) {
-    element.classList.remove("invalid");
-    element.classList.add("valid");
-    element.innerHTML = "Yes";
+    validityParagraph.classList.remove("invalid");
+    validityParagraph.classList.add("valid");
+    validityParagraph.innerHTML = "Yes";
+    fixBtn.style.display = "none";
   } else {
-    element.classList.remove("valid");
-    element.classList.add("invalid");
-    element.innerHTML = "No";
+    validityParagraph.classList.remove("valid");
+    validityParagraph.classList.add("invalid");
+    validityParagraph.innerHTML = "No";
+    fixBtn.style.display = "block";
   }
 }
 
+// TODO: recalculate the hash on data change
 function adjustBlockHashValues(
   blockIndex,
   hashParagraph,
   previousHashParagraph
 ) {
   const currentBlock = blockchain.blockchain[blockIndex];
+
+  // Check hash difficulty of the current Block
+  let isValidDifficulty = blockchain.isValidDifficulty(currentBlock.hash);
+  isValidDifficulty
+    ? (hashParagraph.style.color = "#00bfa5")
+    : (hashParagraph.style.color = "#E91E63");
   hashParagraph.innerHTML = currentBlock.hash;
+
+  //Check the hash difficulty of the previous Block
+  if (currentBlock.index > 0) {
+    isValidDifficulty = blockchain.isValidDifficulty(currentBlock.previousHash);
+    isValidDifficulty
+      ? (previousHashParagraph.style.color = "#00bfa5")
+      : (previousHashParagraph.style.color = "#E91E63");
+  }
   previousHashParagraph.innerHTML = currentBlock.previousHash;
 }
+
+//TODO: change color hashes when incorrect
+
+//TODO: add button to fix hashes
+
+//TODO: ADD nonce
+
+// TODO: Add onClick listener to the change button

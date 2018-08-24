@@ -16,7 +16,7 @@ body {
   margin-top: 80px;
 }
 
-.mt-10#message {
+.message-container.mt-10 {
   margin-top: 10px;
 }
 .border {
@@ -38,11 +38,12 @@ body {
 .overflow-a {
   overflow: auto;
   font-size: 0.85em;
-  color: #1a237e;
+  color: #00bfa5;
+  opacity: 0.9;
   background-color: #f1f8e9;
 }
 
-#message {
+.message-container {
   display: none;
   padding: 5px;
 }
@@ -53,12 +54,62 @@ body {
 .block-validity {
   font-size: 1.1em;
   font-weight: bold;
+  opacity: 0.9;
 }
 
 .block-validity.valid {
-  color: #2e7d32;
+  color: #00bfa5;
 }
 
 .block-validity.invalid {
-  color: #d50000;
+  color: #e91e63;
+}
+
+.arrow-style {
+  font-size: 2em;
+  font-weight: bold;
+  color: black;
+  text-align: center;
+}
+
+#showBtn.clean {
+  background-color: transparent;
+  color: #00bfa5;
+  border: 1px solid #00bfa5;
+}
+
+#checkBtn.success {
+  background: transparent;
+  color: #00bfa5;
+  border: 1px solid #00bfa5;
+}
+
+#checkBtn.failure {
+  background: transparent;
+  color: #e91e63;
+  border: 1px solid #e91e63;
+}
+
+nav.ui.menu {
+  padding: 10px;
+  text-decoration: line-through;
+}
+nav.ui.menu > .header {
+  margin: 5px auto !important;
+  font-size: 1.5em;
+  font-weight: bold;
+}
+.ui.fluid.button.icon[name^="fix-"] {
+  color: #e91e63;
+  margin: 20px auto;
+  display: none;
+  border: 1px solid #e91e63;
+  background-color: transparent;
+}
+
+.ui.fluid.button.icon[name^="fix-"]:hover {
+  color: #00bfa5;
+  margin: 20px auto;
+  border: 1px solid #00bfa5;
+  background-color: transparent;
 }
