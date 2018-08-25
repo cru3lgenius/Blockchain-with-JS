@@ -6,6 +6,11 @@ const blockchain = new Blockchain();
 //Preparing templates for late use
 let blockCard = `<div id={{index}} class="ui card">
   <div class="content">
+    <div class="right floated content">
+      <a class="ui label nonce-label">
+        {{nonce}}
+      </a>
+    </div>
     <h3 class="header">Block {{index}}</h3>
     <br>
     <div class="description">
@@ -50,8 +55,6 @@ init();
 // Show the chain on click
 let isToggled = false;
 $("#showBtn").on("click", function(e) {
-  console.log(blockchain.blockchain);
-
   if (isToggled) {
     $("#showBtn .icon")
       .removeClass("minus")
@@ -102,6 +105,7 @@ $("#addBtn").on("click", function(e) {
   let index = blockchain.latestBlock.index;
   $("#chain .card:last-child").append($(arrowCard));
   $("#chain").append(nextBlockCard);
+  $("#chain .card:last-child [name^='fix-']").on("click", onFix);
   $(`#${index} input`).bind("input", onChange);
 });
 
@@ -149,7 +153,8 @@ function createNextBlock(data) {
     previousBlockHash: latestBlock.previousHash,
     index: latestBlock.index,
     isValid: latestBlock.isValid ? "Yes" : "No",
-    isValidClass: latestBlock.isValid ? "valid" : "invalid"
+    isValidClass: latestBlock.isValid ? "valid" : "invalid",
+    nonce: latestBlock.nonce
   });
   return newCard;
 }
@@ -162,11 +167,8 @@ function onChange(e) {
   currentBlock.hash = newHash;
   currentBlock.isValid = blockchain.isValidDifficulty(currentBlock.hash);
   blockchain.propagateForward(currentBlock.index + 1, currentBlock);
-  console.log(blockchain.blockchain);
   reRenderChain();
 }
-
-function onFix(e) {}
 
 function reRenderChain() {
   $("#chain")
@@ -177,10 +179,16 @@ function reRenderChain() {
       const previousHashParagraph = e2.getElementsByClassName(
         "previous-hash"
       )[0];
+      const nonceLabel = e2.getElementsByClassName("nonce-label")[0];
       const fixBtn = e2.querySelector(`[name^="fix-"]`);
-      const isValidBlock = blockchain.blockchain[e1].isValid;
-      adjustBlockStyles(validityParagraph, fixBtn, isValidBlock, e2);
-      adjustBlockHashValues(e1, hashParagraph, previousHashParagraph, e2);
+      const currentBlock = blockchain.blockchain[e1];
+      adjustBlockStyles(currentBlock, validityParagraph, fixBtn);
+      adjustBlockValues(
+        currentBlock,
+        hashParagraph,
+        previousHashParagraph,
+        nonceLabel
+      );
     });
 }
 
@@ -192,19 +200,16 @@ function init() {
     previousBlockHash: genesisBlock.previousHash,
     index: genesisBlock.index,
     isValid: genesisBlock.isValid ? "Yes" : "No",
-    isValidClass: genesisBlock.isValid ? "valid" : "invalid"
+    isValidClass: genesisBlock.isValid ? "valid" : "invalid",
+    nonce: genesisBlock.nonce
   });
-  console.log(blockchain.blockchain);
   $("#chain").append(genesisCard);
+  $("#chain .card:last-child [name^='fix-']").on("click", onFix);
   $(`#${genesisBlock.index} input`).bind("input", onChange);
 }
 
-function adjustBlockStyles(
-  validityParagraph,
-  fixBtn,
-  isValidBlock,
-  cardElement
-) {
+function adjustBlockStyles(currentBlock, validityParagraph, fixBtn) {
+  const isValidBlock = currentBlock.isValid;
   if (isValidBlock) {
     validityParagraph.classList.remove("invalid");
     validityParagraph.classList.add("valid");
@@ -219,13 +224,12 @@ function adjustBlockStyles(
 }
 
 // TODO: recalculate the hash on data change
-function adjustBlockHashValues(
-  blockIndex,
+function adjustBlockValues(
+  currentBlock,
   hashParagraph,
-  previousHashParagraph
+  previousHashParagraph,
+  nonceLabel
 ) {
-  const currentBlock = blockchain.blockchain[blockIndex];
-
   // Check hash difficulty of the current Block
   let isValidDifficulty = blockchain.isValidDifficulty(currentBlock.hash);
   isValidDifficulty
@@ -241,6 +245,9 @@ function adjustBlockHashValues(
       : (previousHashParagraph.style.color = "#E91E63");
   }
   previousHashParagraph.innerHTML = currentBlock.previousHash;
+
+  const newNonce = currentBlock.nonce;
+  nonceLabel.innerHTML = newNonce;
 }
 
 //TODO: change color hashes when incorrect
@@ -250,3 +257,34 @@ function adjustBlockHashValues(
 //TODO: ADD nonce
 
 // TODO: Add onClick listener to the change button
+
+function onFix(e) {
+  // Strips the index of the name attribute of the button
+  const blockIndex = e.target.name.substring(4);
+  const currentBlock = blockchain.blockchain[blockIndex];
+  fixBlock(currentBlock);
+  blockchain.propagateForward(currentBlock.index + 1, currentBlock);
+  reRenderChain();
+}
+
+function fixBlock(block) {
+  let nonce = 0;
+  let hash = block.hash;
+  const timestamp = block.timestamp;
+  const previousHash = block.previousHash;
+  const index = block.index;
+  const data = block.data;
+  while (!blockchain.isValidNonce(hash)) {
+    nonce += 1;
+    hash = blockchain.calculateHash(
+      index,
+      timestamp,
+      data,
+      previousHash,
+      nonce
+    );
+  }
+  block.hash = hash;
+  block.nonce = nonce;
+  block.isValid = true;
+}
