@@ -113,3 +113,25 @@ nav.ui.menu > .header {
   border: 1px solid #00bfa5;
   background-color: transparent;
 }
+
+.footer {
+  box-shadow: 0px -2px #d3d3d3;
+  padding: 4px;
+  height: 40px;
+  width: 100vw;
+  position: relative;
+  display: block;
+  top: 100px;
+}
+
+.footer .github-link {
+  display: block;
+  margin: 0 auto;
+  height: 24px;
+  width: 24px;
+}
+
+.footer-text {
+  text-align: center;
+  font-size: 0.8em;
+}

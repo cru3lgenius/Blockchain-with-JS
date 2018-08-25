@@ -132,4 +132,5 @@ class Blockchain {
   }
 }
 
-module.exports = Blockchain;
+const blockchain = new Blockchain();
+module.exports = blockchain;
