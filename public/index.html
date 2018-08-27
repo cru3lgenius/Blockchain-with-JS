@@ -8,7 +8,6 @@
   <title>Blockchain visual tool</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.css" />
   <link rel="stylesheet" href="styles.css">
-  <!-- <script src="handlebars-v4.0.11.js"></script> -->
 </head>
 
 <body>
@@ -18,7 +17,26 @@
     </div>
   </nav>
 
-  <div class="ui stackable grid container centered">
+
+  <div id="links" class="ui stackable grid container centered">
+    <div class="four wide column">
+      <div class="ui small basic icon buttons">
+        <button class="ui button">Inspired By:</button>
+        <a target="_blank" href="https://www.youtube.com/watch?v=zVqczFZr124&list=PLzvRQMJ9HDiTqZmbtFisdXFxul5k0F-Q4" class="ui button"><i
+            class="youtube icon"></i></a>
+        <a target="_blank" href="https://github.com/seanjameshan/blockchain" class="ui button"><i class="github icon"></i></a>
+      </div>
+    </div>
+    <div class="three wide column">
+      <div class="ui small basic icon buttons">
+        <button class="ui button">Project Repo:</button>
+        <a target="_blank" href="https://github.com/cru3lgenius/Blockchain-with-JS" class="ui button"><i class="github icon"></i></a>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="flex-content ui stackable grid container centered">
     <section class="ten wide column  mt-50">
       <h3 class="ui header">Check blockchain properties</h3>
       <br>
@@ -53,7 +71,7 @@
     <section id="chain" class="ten wide column mt-50 mb-50 hide">
 
     </section>
-    <section class="ten wide column mt-50">
+    <section class="six wide column mt-50">
       <div id="message-new-block" class="message-container mt-10">
 
       </div>
@@ -71,7 +89,6 @@
   </div>
 
   <footer class="footer">
-    <img class="github-link" src="./images/GitHub-Mark-32px.png" alt="github-link" />
     <div class="footer-text">
       Copyright 2018 © Blockchain Visualizer
     </div>
@@ -91,6 +108,7 @@
   </script>
   <script src="bundle.js "></script>
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.js "></script> -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
 </body>
 
 </html>
